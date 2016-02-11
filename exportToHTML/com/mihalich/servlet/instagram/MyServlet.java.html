@@ -1,0 +1,550 @@
+<html>
+<head>
+<title>MyServlet.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }
+.s0 { color: rgb(204,120,50); }
+.s1 { color: rgb(169,183,198); }
+.s2 { color: rgb(98,151,85); font-style: italic; }
+.s3 { color: rgb(106,135,89); }
+.s4 { color: rgb(104,151,187); }
+.s5 { color: rgb(128,128,128); }
+.s6 { color: rgb(98,151,85); font-weight: bold; font-style: italic; }
+</style>
+</head>
+<BODY BGCOLOR="#2b2b2b">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#C0C0C0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+MyServlet.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<a name="l1"><span class="ln">1    </span></a><span class="s0">package </span><span class="s1">com.mihalich.servlet.instagram</span><span class="s0">;</span><span class="s1"> 
+<a name="l2"><span class="ln">2    </span></a> 
+<a name="l3"><span class="ln">3    </span></a></span><span class="s0">import </span><span class="s1">javax.servlet.ServletException</span><span class="s0">;</span><span class="s1"> 
+<a name="l4"><span class="ln">4    </span></a></span><span class="s0">import </span><span class="s1">javax.servlet.annotation.WebServlet</span><span class="s0">;</span><span class="s1"> 
+<a name="l5"><span class="ln">5    </span></a></span><span class="s0">import </span><span class="s1">javax.servlet.http.HttpServlet</span><span class="s0">;</span><span class="s1"> 
+<a name="l6"><span class="ln">6    </span></a></span><span class="s0">import </span><span class="s1">javax.servlet.http.HttpServletRequest</span><span class="s0">;</span><span class="s1"> 
+<a name="l7"><span class="ln">7    </span></a></span><span class="s0">import </span><span class="s1">javax.servlet.http.HttpServletResponse</span><span class="s0">;</span><span class="s1"> 
+<a name="l8"><span class="ln">8    </span></a> 
+<a name="l9"><span class="ln">9    </span></a></span><span class="s0">import </span><span class="s1">java.io.BufferedReader</span><span class="s0">;</span><span class="s1"> 
+<a name="l10"><span class="ln">10   </span></a></span><span class="s0">import </span><span class="s1">java.io.IOException</span><span class="s0">;</span><span class="s1"> 
+<a name="l11"><span class="ln">11   </span></a></span><span class="s0">import </span><span class="s1">java.io.InputStreamReader</span><span class="s0">;</span><span class="s1"> 
+<a name="l12"><span class="ln">12   </span></a></span><span class="s0">import </span><span class="s1">java.net.HttpURLConnection</span><span class="s0">;</span><span class="s1"> 
+<a name="l13"><span class="ln">13   </span></a></span><span class="s0">import </span><span class="s1">java.net.URL</span><span class="s0">;</span><span class="s1"> 
+<a name="l14"><span class="ln">14   </span></a></span><span class="s0">import </span><span class="s1">java.sql.Connection</span><span class="s0">;</span><span class="s1"> 
+<a name="l15"><span class="ln">15   </span></a></span><span class="s0">import </span><span class="s1">java.util.*</span><span class="s0">;</span><span class="s1"> 
+<a name="l16"><span class="ln">16   </span></a> 
+<a name="l17"><span class="ln">17   </span></a> 
+<a name="l18"><span class="ln">18   </span></a></span><span class="s0">import </span><span class="s1">org.json.JSONArray</span><span class="s0">;</span><span class="s1"> 
+<a name="l19"><span class="ln">19   </span></a></span><span class="s0">import </span><span class="s1">org.json.JSONException</span><span class="s0">;</span><span class="s1"> 
+<a name="l20"><span class="ln">20   </span></a></span><span class="s0">import </span><span class="s1">org.json.JSONObject</span><span class="s0">;</span><span class="s1"> 
+<a name="l21"><span class="ln">21   </span></a></span><span class="s2">/** 
+<a name="l22"><span class="ln">22   </span></a> * Created by mihalich on 09.02.2016. 
+<a name="l23"><span class="ln">23   </span></a> */</span><span class="s1"> 
+<a name="l24"><span class="ln">24   </span></a>@WebServlet(</span><span class="s3">&quot;/MyServlet&quot;</span><span class="s1">) 
+<a name="l25"><span class="ln">25   </span></a></span><span class="s0">public class </span><span class="s1">MyServlet </span><span class="s0">extends </span><span class="s1">HttpServlet { 
+<a name="l26"><span class="ln">26   </span></a> 
+<a name="l27"><span class="ln">27   </span></a>    </span><span class="s0">private static final long </span><span class="s1">serialVersionUID = </span><span class="s4">1L</span><span class="s0">;</span><span class="s1"> 
+<a name="l28"><span class="ln">28   </span></a>    </span><span class="s0">private final </span><span class="s1">String USER_AGENT = </span><span class="s3">&quot;Mozilla/5.0&quot;</span><span class="s0">;</span><span class="s1"> 
+<a name="l29"><span class="ln">29   </span></a>    </span><span class="s5">//Данные для подключения к Instagram API</span><span class="s1"> 
+<a name="l30"><span class="ln">30   </span></a>    </span><span class="s0">private final </span><span class="s1">String CLIENT_ID = </span><span class="s3">&quot;54c66884e1154304a0a7f82ec312c07c&quot;</span><span class="s0">;</span><span class="s1"> 
+<a name="l31"><span class="ln">31   </span></a>    </span><span class="s0">private final </span><span class="s1">String CLIENT_SECRET = </span><span class="s3">&quot;91fc22a538e84e2f91ec53fdcdc0324e&quot;</span><span class="s0">;</span><span class="s1"> 
+<a name="l32"><span class="ln">32   </span></a>    </span><span class="s0">private final </span><span class="s1">String REDIRECT_URI = </span><span class="s3">&quot;http://localhost&quot;</span><span class="s0">;</span><span class="s1"> 
+<a name="l33"><span class="ln">33   </span></a>    </span><span class="s0">private final </span><span class="s1">String ACCESS_TOKEN = </span><span class="s3">&quot;2898235952.5b9e1e6.0ae80b70367c43248d9af8571dccb678&quot;</span><span class="s0">;</span><span class="s1"> 
+<a name="l34"><span class="ln">34   </span></a>    </span><span class="s2">/** 
+<a name="l35"><span class="ln">35   </span></a>     * Default constructor. 
+<a name="l36"><span class="ln">36   </span></a>     */</span><span class="s1"> 
+<a name="l37"><span class="ln">37   </span></a>    </span><span class="s0">public </span><span class="s1">MyServlet() { 
+<a name="l38"><span class="ln">38   </span></a>        </span><span class="s5">// TODO Auto-generated constructor stub</span><span class="s1"> 
+<a name="l39"><span class="ln">39   </span></a>    } 
+<a name="l40"><span class="ln">40   </span></a> 
+<a name="l41"><span class="ln">41   </span></a>    </span><span class="s2">/** 
+<a name="l42"><span class="ln">42   </span></a>     * </span><span class="s6">@see </span><span class="s2">HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response) 
+<a name="l43"><span class="ln">43   </span></a>     */</span><span class="s1"> 
+<a name="l44"><span class="ln">44   </span></a>    </span><span class="s0">protected void </span><span class="s1">doGet(HttpServletRequest request</span><span class="s0">, </span><span class="s1">HttpServletResponse response) </span><span class="s0">throws </span><span class="s1">ServletException</span><span class="s0">, </span><span class="s1">IOException { 
+<a name="l45"><span class="ln">45   </span></a>        </span><span class="s0">if </span><span class="s1">(!request.getParameter(</span><span class="s3">&quot;username&quot;</span><span class="s1">).isEmpty())</span><span class="s5">//проверка на введенное имя</span><span class="s1"> 
+<a name="l46"><span class="ln">46   </span></a>        { 
+<a name="l47"><span class="ln">47   </span></a>            String username = (String) request.getParameter(</span><span class="s3">&quot;username&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l48"><span class="ln">48   </span></a> 
+<a name="l49"><span class="ln">49   </span></a>            String userID = </span><span class="s3">&quot;https://api.instagram.com/v1/users/search?q=&quot;</span><span class="s1">+username+</span><span class="s3">&quot;&amp;access_token=&quot;</span><span class="s1">+ACCESS_TOKEN</span><span class="s0">;</span><span class="s1"> 
+<a name="l50"><span class="ln">50   </span></a>            String userid = getID(userID</span><span class="s0">, </span><span class="s1">username)</span><span class="s0">;</span><span class="s1"> 
+<a name="l51"><span class="ln">51   </span></a>            System.out.println(</span><span class="s3">&quot;userID === &quot; </span><span class="s1">+ userid)</span><span class="s0">;</span><span class="s1"> 
+<a name="l52"><span class="ln">52   </span></a>            </span><span class="s0">if </span><span class="s1">(!(userid==</span><span class="s0">null</span><span class="s1">)) </span><span class="s5">//проверка на получение ID пользователя, если значение пустое то либо нет такого пользователя либо не публичен</span><span class="s1"> 
+<a name="l53"><span class="ln">53   </span></a>            { 
+<a name="l54"><span class="ln">54   </span></a> 
+<a name="l55"><span class="ln">55   </span></a>                </span><span class="s5">//String token = (String) request.getParameter(&quot;token&quot;);</span><span class="s1"> 
+<a name="l56"><span class="ln">56   </span></a>                </span><span class="s5">//String userid = (String) request.getParameter(&quot;user-id&quot;);</span><span class="s1"> 
+<a name="l57"><span class="ln">57   </span></a>                </span><span class="s5">//String code = &quot;https://api.instagram.com/oauth/authorize/?client_id=&quot;+CLIENT_ID+&quot;&amp;redirect_uri=&quot;+REDIRECT_URI+&quot;&amp;response_type=code&amp;scope=follower_list+comments+likes&quot;;</span><span class="s1"> 
+<a name="l58"><span class="ln">58   </span></a> 
+<a name="l59"><span class="ln">59   </span></a>                </span><span class="s5">// Строка запроса для получения основных данных пользователя</span><span class="s1"> 
+<a name="l60"><span class="ln">60   </span></a>                String code = </span><span class="s3">&quot;https://api.instagram.com/v1/users/&quot;</span><span class="s1">+userid+</span><span class="s3">&quot;/?access_token=&quot;</span><span class="s1">+ACCESS_TOKEN</span><span class="s0">;</span><span class="s1"> 
+<a name="l61"><span class="ln">61   </span></a>                Date start = </span><span class="s0">new </span><span class="s1">Date()</span><span class="s0">;</span><span class="s1"> 
+<a name="l62"><span class="ln">62   </span></a>                </span><span class="s0">int </span><span class="s1">followed = getFollowed(code)</span><span class="s0">;</span><span class="s1"> 
+<a name="l63"><span class="ln">63   </span></a>                Date followtime = </span><span class="s0">new </span><span class="s1">Date()</span><span class="s0">;</span><span class="s1"> 
+<a name="l64"><span class="ln">64   </span></a>                </span><span class="s0">int </span><span class="s1">follows = getFollows(code)</span><span class="s0">;</span><span class="s1"> 
+<a name="l65"><span class="ln">65   </span></a>                Date followstime = </span><span class="s0">new </span><span class="s1">Date()</span><span class="s0">;</span><span class="s1"> 
+<a name="l66"><span class="ln">66   </span></a>                String name = getName(code)</span><span class="s0">;</span><span class="s1"> 
+<a name="l67"><span class="ln">67   </span></a>                Date getNametime = </span><span class="s0">new </span><span class="s1">Date()</span><span class="s0">;</span><span class="s1"> 
+<a name="l68"><span class="ln">68   </span></a> 
+<a name="l69"><span class="ln">69   </span></a>                </span><span class="s5">//Строка запроса для получения данных по последнийм 30 постам</span><span class="s1"> 
+<a name="l70"><span class="ln">70   </span></a>                String reqMedia = </span><span class="s3">&quot;https://api.instagram.com/v1/users/&quot;</span><span class="s1">+userid+</span><span class="s3">&quot;/media/recent/?access_token=&quot;</span><span class="s1">+ACCESS_TOKEN+</span><span class="s3">&quot;&amp;count=30&quot;</span><span class="s0">;</span><span class="s1"> 
+<a name="l71"><span class="ln">71   </span></a>                </span><span class="s0">int </span><span class="s1">comments30 = getCommentsCount(reqMedia)</span><span class="s0">;</span><span class="s1"> 
+<a name="l72"><span class="ln">72   </span></a>                Date getCommentstime = </span><span class="s0">new </span><span class="s1">Date()</span><span class="s0">;</span><span class="s1"> 
+<a name="l73"><span class="ln">73   </span></a>                </span><span class="s0">int </span><span class="s1">likes30 = getLikesCount(reqMedia)</span><span class="s0">;</span><span class="s1"> 
+<a name="l74"><span class="ln">74   </span></a>                Date getLikestime = </span><span class="s0">new </span><span class="s1">Date()</span><span class="s0">;</span><span class="s1"> 
+<a name="l75"><span class="ln">75   </span></a>                ArrayList&lt;String&gt; commentsTexts30 = getCommentsTexts30(reqMedia)</span><span class="s0">;</span><span class="s1"> 
+<a name="l76"><span class="ln">76   </span></a>                Date getCommentsTexttime = </span><span class="s0">new </span><span class="s1">Date()</span><span class="s0">;</span><span class="s1"> 
+<a name="l77"><span class="ln">77   </span></a>                </span><span class="s5">//Коллекция повторяющихся слов из комментариев</span><span class="s1"> 
+<a name="l78"><span class="ln">78   </span></a>                Map&lt;String</span><span class="s0">,</span><span class="s1">Integer&gt; wordRepeate = getWordRepeate(commentsTexts30)</span><span class="s0">;</span><span class="s1"> 
+<a name="l79"><span class="ln">79   </span></a>                Date getmaptime = </span><span class="s0">new </span><span class="s1">Date()</span><span class="s0">;</span><span class="s1"> 
+<a name="l80"><span class="ln">80   </span></a>                </span><span class="s5">//Скоринг по парамет</span><span class="s1"> 
+<a name="l81"><span class="ln">81   </span></a>                </span><span class="s0">double </span><span class="s1">score = getScore (followed</span><span class="s0">, </span><span class="s1">follows</span><span class="s0">, </span><span class="s1">likes30)</span><span class="s0">;</span><span class="s1"> 
+<a name="l82"><span class="ln">82   </span></a>                Date calcscoretime = </span><span class="s0">new </span><span class="s1">Date()</span><span class="s0">;</span><span class="s1"> 
+<a name="l83"><span class="ln">83   </span></a>                ArrayList&lt;String&gt; allminimaltime = getMedia(reqMedia)</span><span class="s0">;</span><span class="s1"> 
+<a name="l84"><span class="ln">84   </span></a>                Date minimaltime = </span><span class="s0">new </span><span class="s1">Date()</span><span class="s0">;</span><span class="s1"> 
+<a name="l85"><span class="ln">85   </span></a> 
+<a name="l86"><span class="ln">86   </span></a>                String split = allminimaltime.get(</span><span class="s4">2</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l87"><span class="ln">87   </span></a> 
+<a name="l88"><span class="ln">88   </span></a>                ArrayList&lt;String&gt; commList = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;(Arrays.asList(split))</span><span class="s0">;</span><span class="s1"> 
+<a name="l89"><span class="ln">89   </span></a>                Map&lt;String</span><span class="s0">,</span><span class="s1">Integer&gt; wordRepeate2 = getWordRepeate(commList)</span><span class="s0">;</span><span class="s1"> 
+<a name="l90"><span class="ln">90   </span></a> 
+<a name="l91"><span class="ln">91   </span></a>                </span><span class="s0">long </span><span class="s1">ftime = start.getTime()-followtime.getTime()</span><span class="s0">;</span><span class="s1"> 
+<a name="l92"><span class="ln">92   </span></a>                </span><span class="s0">long </span><span class="s1">fstime = followtime.getTime()-followstime.getTime()</span><span class="s0">;</span><span class="s1"> 
+<a name="l93"><span class="ln">93   </span></a>                </span><span class="s0">long </span><span class="s1">nametime = followstime.getTime()-getNametime.getTime()</span><span class="s0">;</span><span class="s1"> 
+<a name="l94"><span class="ln">94   </span></a>                </span><span class="s0">long </span><span class="s1">commtime = getNametime.getTime()-getCommentstime.getTime()</span><span class="s0">;</span><span class="s1"> 
+<a name="l95"><span class="ln">95   </span></a>                </span><span class="s0">long </span><span class="s1">likestime = getCommentstime.getTime()-getLikestime.getTime()</span><span class="s0">;</span><span class="s1"> 
+<a name="l96"><span class="ln">96   </span></a>                </span><span class="s0">long </span><span class="s1">gettexttime = getLikestime.getTime()-getCommentsTexttime.getTime()</span><span class="s0">;</span><span class="s1"> 
+<a name="l97"><span class="ln">97   </span></a>                </span><span class="s0">long </span><span class="s1">maptime = getCommentsTexttime.getTime()-getmaptime.getTime()</span><span class="s0">;</span><span class="s1"> 
+<a name="l98"><span class="ln">98   </span></a>                </span><span class="s0">long </span><span class="s1">scoretime = getmaptime.getTime()-calcscoretime.getTime()</span><span class="s0">;</span><span class="s1"> 
+<a name="l99"><span class="ln">99   </span></a>                </span><span class="s0">long </span><span class="s1">alltime = start.getTime()-calcscoretime.getTime()</span><span class="s0">;</span><span class="s1"> 
+<a name="l100"><span class="ln">100  </span></a>                </span><span class="s0">long </span><span class="s1">minimaltimr = calcscoretime.getTime()-minimaltime.getTime()</span><span class="s0">;</span><span class="s1"> 
+<a name="l101"><span class="ln">101  </span></a> 
+<a name="l102"><span class="ln">102  </span></a> 
+<a name="l103"><span class="ln">103  </span></a>                System.out.println(</span><span class="s3">&quot;на запрос фоловеров затрачено &quot;</span><span class="s1">+ftime+</span><span class="s3">&quot;ms&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l104"><span class="ln">104  </span></a>                System.out.println(</span><span class="s3">&quot;на запрос фоловьемых затрачено &quot;</span><span class="s1">+fstime+</span><span class="s3">&quot;ms&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l105"><span class="ln">105  </span></a>                System.out.println(</span><span class="s3">&quot;на запрос имени затрачено &quot;</span><span class="s1">+nametime+</span><span class="s3">&quot;ms&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l106"><span class="ln">106  </span></a>                System.out.println(</span><span class="s3">&quot;на запрос кол-ва комментариев  затрачено &quot;</span><span class="s1">+commtime+</span><span class="s3">&quot;ms&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l107"><span class="ln">107  </span></a>                System.out.println(</span><span class="s3">&quot;на запрос кол-ва лайков затрачено &quot;</span><span class="s1">+likestime+</span><span class="s3">&quot;ms&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l108"><span class="ln">108  </span></a>                System.out.println(</span><span class="s3">&quot;на запрос текстов комм-ев затрачено &quot;</span><span class="s1">+gettexttime+</span><span class="s3">&quot;ms&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l109"><span class="ln">109  </span></a>                System.out.println(</span><span class="s3">&quot;на запрос заноса слов в коллекцию затрачено &quot;</span><span class="s1">+maptime+</span><span class="s3">&quot;ms&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l110"><span class="ln">110  </span></a>                System.out.println(</span><span class="s3">&quot;на запрос подсчет баллов затрачено &quot;</span><span class="s1">+scoretime+</span><span class="s3">&quot;ms&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l111"><span class="ln">111  </span></a>                System.out.println(</span><span class="s3">&quot;ВСЕГО затрачено &quot;</span><span class="s1">+alltime+</span><span class="s3">&quot;ms&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l112"><span class="ln">112  </span></a>                System.out.println(</span><span class="s3">&quot;После сокращения запроса затраченное время &quot;</span><span class="s1">+minimaltimr+</span><span class="s3">&quot;ms&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l113"><span class="ln">113  </span></a> 
+<a name="l114"><span class="ln">114  </span></a> 
+<a name="l115"><span class="ln">115  </span></a>                </span><span class="s5">//Запись в базу данных</span><span class="s1"> 
+<a name="l116"><span class="ln">116  </span></a>                writeToDB( name</span><span class="s0">, </span><span class="s1">followed</span><span class="s0">, </span><span class="s1">follows</span><span class="s0">, </span><span class="s1">comments30</span><span class="s0">, </span><span class="s1">likes30</span><span class="s0">,</span><span class="s1">commentsTexts30)</span><span class="s0">;</span><span class="s1"> 
+<a name="l117"><span class="ln">117  </span></a> 
+<a name="l118"><span class="ln">118  </span></a>                </span><span class="s5">//Блок проверки</span><span class="s1"> 
+<a name="l119"><span class="ln">119  </span></a>                System.out.println(</span><span class="s3">&quot;token&quot; </span><span class="s1">+ ACCESS_TOKEN +</span><span class="s3">&quot;user-id&quot; </span><span class="s1">+ userid)</span><span class="s0">;</span><span class="s1"> 
+<a name="l120"><span class="ln">120  </span></a>                System.out.println(</span><span class="s3">&quot;Name :---&gt; &quot; </span><span class="s1">+name)</span><span class="s0">;</span><span class="s1"> 
+<a name="l121"><span class="ln">121  </span></a>                System.out.println(</span><span class="s3">&quot;followed_by :---&gt; &quot; </span><span class="s1">+followed)</span><span class="s0">;</span><span class="s1"> 
+<a name="l122"><span class="ln">122  </span></a>                System.out.println(</span><span class="s3">&quot;follows :---&gt; &quot; </span><span class="s1">+follows)</span><span class="s0">;</span><span class="s1"> 
+<a name="l123"><span class="ln">123  </span></a>                System.out.println(</span><span class="s3">&quot;Comment over 30 posts :---&gt; &quot; </span><span class="s1">+comments30)</span><span class="s0">;</span><span class="s1"> 
+<a name="l124"><span class="ln">124  </span></a>                System.out.println(</span><span class="s3">&quot;Likes over 30 posts :---&gt; &quot; </span><span class="s1">+likes30)</span><span class="s0">;</span><span class="s1"> 
+<a name="l125"><span class="ln">125  </span></a>                System.out.println(</span><span class="s3">&quot;comments over 30 posts :---&gt; &quot; </span><span class="s1">+commentsTexts30)</span><span class="s0">;</span><span class="s1"> 
+<a name="l126"><span class="ln">126  </span></a>                System.out.println(</span><span class="s3">&quot;Score :---&gt; &quot; </span><span class="s1">+score)</span><span class="s0">;</span><span class="s1"> 
+<a name="l127"><span class="ln">127  </span></a> 
+<a name="l128"><span class="ln">128  </span></a>                System.out.println(</span><span class="s3">&quot;REPEATE&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l129"><span class="ln">129  </span></a>                </span><span class="s0">for</span><span class="s1">(Map.Entry&lt;String</span><span class="s0">, </span><span class="s1">Integer&gt; entry : wordRepeate.entrySet()) { 
+<a name="l130"><span class="ln">130  </span></a>                    String key = entry.getKey()</span><span class="s0">;</span><span class="s1"> 
+<a name="l131"><span class="ln">131  </span></a>                    </span><span class="s0">int </span><span class="s1">value = entry.getValue()</span><span class="s0">;</span><span class="s1"> 
+<a name="l132"><span class="ln">132  </span></a>                    System.out.println(</span><span class="s3">&quot;Word &quot; </span><span class="s1">+key+</span><span class="s3">&quot; Повторяется &quot; </span><span class="s1">+ value+</span><span class="s3">&quot; раз&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l133"><span class="ln">133  </span></a>                } 
+<a name="l134"><span class="ln">134  </span></a> 
+<a name="l135"><span class="ln">135  </span></a>                System.out.println(</span><span class="s3">&quot;REPEATE2&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l136"><span class="ln">136  </span></a>                </span><span class="s0">for</span><span class="s1">(Map.Entry&lt;String</span><span class="s0">, </span><span class="s1">Integer&gt; entry : wordRepeate2.entrySet()) { 
+<a name="l137"><span class="ln">137  </span></a>                    String key = entry.getKey()</span><span class="s0">;</span><span class="s1"> 
+<a name="l138"><span class="ln">138  </span></a>                    </span><span class="s0">int </span><span class="s1">value = entry.getValue()</span><span class="s0">;</span><span class="s1"> 
+<a name="l139"><span class="ln">139  </span></a>                    System.out.println(</span><span class="s3">&quot;Word &quot; </span><span class="s1">+key+</span><span class="s3">&quot; Повторяется &quot; </span><span class="s1">+ value+</span><span class="s3">&quot; раз&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l140"><span class="ln">140  </span></a>                } 
+<a name="l141"><span class="ln">141  </span></a>                </span><span class="s5">//Конец блока проверки</span><span class="s1"> 
+<a name="l142"><span class="ln">142  </span></a> 
+<a name="l143"><span class="ln">143  </span></a>                </span><span class="s5">//Возврат информации на запрос из основной страницы</span><span class="s1"> 
+<a name="l144"><span class="ln">144  </span></a>                response.setContentType(</span><span class="s3">&quot;text/html;charset=UTF-8&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l145"><span class="ln">145  </span></a>                response.getWriter().println(</span><span class="s3">&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset=</span><span class="s0">\&quot;</span><span class="s3">UTF-8</span><span class="s0">\&quot;</span><span class="s3">&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;&quot; </span><span class="s1">+ username)</span><span class="s0">;</span><span class="s1"> 
+<a name="l146"><span class="ln">146  </span></a>                response.getWriter().println(</span><span class="s3">&quot;&lt;p&gt; Имя: &quot; </span><span class="s1">+ name + </span><span class="s3">&quot; &quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l147"><span class="ln">147  </span></a>                response.getWriter().println(</span><span class="s3">&quot;Фоловеров: &quot; </span><span class="s1">+ followed + </span><span class="s3">&quot; &quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l148"><span class="ln">148  </span></a>                response.getWriter().println(</span><span class="s3">&quot;Фоловьемых: &quot; </span><span class="s1">+ follows + </span><span class="s3">&quot; &quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l149"><span class="ln">149  </span></a>                response.getWriter().println(</span><span class="s3">&quot;Лайков: &quot; </span><span class="s1">+ likes30 + </span><span class="s3">&quot;&lt;br&gt;&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l150"><span class="ln">150  </span></a>                response.getWriter().println(</span><span class="s3">&quot;Баллов: &quot; </span><span class="s1">+ score + </span><span class="s3">&quot;&lt;br&gt;&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l151"><span class="ln">151  </span></a>                response.getWriter().println(</span><span class="s3">&quot;Повторяющиеся слова: &quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l152"><span class="ln">152  </span></a>                </span><span class="s0">for</span><span class="s1">(Map.Entry&lt;String</span><span class="s0">, </span><span class="s1">Integer&gt; entry : wordRepeate.entrySet()) { 
+<a name="l153"><span class="ln">153  </span></a>                    String key = entry.getKey()</span><span class="s0">;</span><span class="s1"> 
+<a name="l154"><span class="ln">154  </span></a>                    </span><span class="s0">int </span><span class="s1">value = entry.getValue()</span><span class="s0">;</span><span class="s1"> 
+<a name="l155"><span class="ln">155  </span></a>                    response.getWriter().println(key+</span><span class="s3">&quot; -- &quot;</span><span class="s1">+value+</span><span class="s3">&quot; раза, &quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l156"><span class="ln">156  </span></a>                } 
+<a name="l157"><span class="ln">157  </span></a>                response.getWriter().println(</span><span class="s3">&quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l158"><span class="ln">158  </span></a>            } 
+<a name="l159"><span class="ln">159  </span></a>            </span><span class="s0">else</span><span class="s1"> 
+<a name="l160"><span class="ln">160  </span></a>            { 
+<a name="l161"><span class="ln">161  </span></a>                </span><span class="s5">//Возврат в случае отсутсвия пользователя</span><span class="s1"> 
+<a name="l162"><span class="ln">162  </span></a>                response.setContentType(</span><span class="s3">&quot;text/html;charset=UTF-8&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l163"><span class="ln">163  </span></a>                response.getWriter().println(</span><span class="s3">&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset=</span><span class="s0">\&quot;</span><span class="s3">UTF-8</span><span class="s0">\&quot;</span><span class="s3">&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l164"><span class="ln">164  </span></a>                response.getWriter().println(</span><span class="s3">&quot;&lt;p&gt;Имя не найдено или доступ к нему закрыт&lt;/p&gt;&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l165"><span class="ln">165  </span></a>                response.getWriter().println(</span><span class="s3">&quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l166"><span class="ln">166  </span></a>            } 
+<a name="l167"><span class="ln">167  </span></a>        } 
+<a name="l168"><span class="ln">168  </span></a>        </span><span class="s0">else</span><span class="s1"> 
+<a name="l169"><span class="ln">169  </span></a>        { 
+<a name="l170"><span class="ln">170  </span></a>            </span><span class="s5">//Возврат в случае пустой строки</span><span class="s1"> 
+<a name="l171"><span class="ln">171  </span></a>            response.setContentType(</span><span class="s3">&quot;text/html;charset=UTF-8&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l172"><span class="ln">172  </span></a>            response.getWriter().println(</span><span class="s3">&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset=</span><span class="s0">\&quot;</span><span class="s3">UTF-8</span><span class="s0">\&quot;</span><span class="s3">&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l173"><span class="ln">173  </span></a>            response.getWriter().println(</span><span class="s3">&quot;&lt;p&gt;Вы не ввели имя&lt;/p&gt;&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l174"><span class="ln">174  </span></a>            response.getWriter().println(</span><span class="s3">&quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l175"><span class="ln">175  </span></a>        } 
+<a name="l176"><span class="ln">176  </span></a>    } 
+<a name="l177"><span class="ln">177  </span></a>    </span><span class="s2">/** 
+<a name="l178"><span class="ln">178  </span></a>     * 
+<a name="l179"><span class="ln">179  </span></a>     * </span><span class="s6">@param </span><span class="s2">searchnameURL: Строка запроса для получния ID введенного пользователя 
+<a name="l180"><span class="ln">180  </span></a>     * </span><span class="s6">@param </span><span class="s2">searchUser: Введенный пользователь 
+<a name="l181"><span class="ln">181  </span></a>     * </span><span class="s6">@param </span><span class="s2">param: Параметр, что плоучить на выходе (0-базовая инфа, 1 фолловеры) 
+<a name="l182"><span class="ln">182  </span></a>     * </span><span class="s6">@return </span><span class="s2">: String значение ID 
+<a name="l183"><span class="ln">183  </span></a>     *     * @throws Exception, JSONExceptio 
+<a name="l184"><span class="ln">184  </span></a>     */</span><span class="s1"> 
+<a name="l185"><span class="ln">185  </span></a> 
+<a name="l186"><span class="ln">186  </span></a>    </span><span class="s2">/** 
+<a name="l187"><span class="ln">187  </span></a>     * </span><span class="s6">@see </span><span class="s2">HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response) 
+<a name="l188"><span class="ln">188  </span></a>     */</span><span class="s1"> 
+<a name="l189"><span class="ln">189  </span></a>    </span><span class="s0">protected void </span><span class="s1">doPost(HttpServletRequest request</span><span class="s0">, </span><span class="s1">HttpServletResponse response) </span><span class="s0">throws </span><span class="s1">ServletException</span><span class="s0">, </span><span class="s1">IOException { 
+<a name="l190"><span class="ln">190  </span></a>        </span><span class="s5">// TODO Auto-generated method stub</span><span class="s1"> 
+<a name="l191"><span class="ln">191  </span></a>        doGet(request</span><span class="s0">, </span><span class="s1">response)</span><span class="s0">;</span><span class="s1"> 
+<a name="l192"><span class="ln">192  </span></a>    } 
+<a name="l193"><span class="ln">193  </span></a> 
+<a name="l194"><span class="ln">194  </span></a>    </span><span class="s0">private </span><span class="s1">String getID(String searchnameURL</span><span class="s0">, </span><span class="s1">String searchUser) </span><span class="s0">throws </span><span class="s1">JSONException</span><span class="s0">, </span><span class="s1">IOException { 
+<a name="l195"><span class="ln">195  </span></a>        String resp = </span><span class="s0">null;</span><span class="s1"> 
+<a name="l196"><span class="ln">196  </span></a>        JSONObject jsonComm = </span><span class="s0">new </span><span class="s1">JSONObject(getjson(searchnameURL).toString())</span><span class="s0">;</span><span class="s1"> 
+<a name="l197"><span class="ln">197  </span></a>        JSONArray dataComm = jsonComm.getJSONArray(</span><span class="s3">&quot;data&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l198"><span class="ln">198  </span></a>        </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s4">0</span><span class="s0">; </span><span class="s1">i&lt; dataComm.length()</span><span class="s0">;</span><span class="s1">i++) 
+<a name="l199"><span class="ln">199  </span></a>        { 
+<a name="l200"><span class="ln">200  </span></a>            String username = dataComm.getJSONObject(i).getString(</span><span class="s3">&quot;username&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l201"><span class="ln">201  </span></a>            </span><span class="s0">if </span><span class="s1">(username.equals(searchUser)) 
+<a name="l202"><span class="ln">202  </span></a>            { 
+<a name="l203"><span class="ln">203  </span></a>                resp = dataComm.getJSONObject(i).getString(</span><span class="s3">&quot;id&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l204"><span class="ln">204  </span></a>                </span><span class="s0">break;</span><span class="s1"> 
+<a name="l205"><span class="ln">205  </span></a>            } 
+<a name="l206"><span class="ln">206  </span></a>        } 
+<a name="l207"><span class="ln">207  </span></a>        </span><span class="s0">return </span><span class="s1">resp</span><span class="s0">;</span><span class="s1"> 
+<a name="l208"><span class="ln">208  </span></a>    } 
+<a name="l209"><span class="ln">209  </span></a>    </span><span class="s2">/** 
+<a name="l210"><span class="ln">210  </span></a>     * 
+<a name="l211"><span class="ln">211  </span></a>     * Запись параметров в базу данных 
+<a name="l212"><span class="ln">212  </span></a>     * </span><span class="s6">@param </span><span class="s2">name: Строка запроса для получния ID введенного пользователя 
+<a name="l213"><span class="ln">213  </span></a>     * </span><span class="s6">@param </span><span class="s2">followed: Введенный пользователь 
+<a name="l214"><span class="ln">214  </span></a>     * </span><span class="s6">@param </span><span class="s2">follows: Параметр, что плоучить на выходе (0-базовая инфа, 1 фолловеры) 
+<a name="l215"><span class="ln">215  </span></a>     * </span><span class="s6">@param </span><span class="s2">comments30: Параметр, что плоучить на выходе (0-базовая инфа, 1 фолловеры) 
+<a name="l216"><span class="ln">216  </span></a>     * </span><span class="s6">@param </span><span class="s2">likes30: Параметр, что плоучить на выходе (0-базовая инфа, 1 фолловеры) 
+<a name="l217"><span class="ln">217  </span></a>     * 
+<a name="l218"><span class="ln">218  </span></a>     * 
+<a name="l219"><span class="ln">219  </span></a>     */</span><span class="s1"> 
+<a name="l220"><span class="ln">220  </span></a>    </span><span class="s0">private void </span><span class="s1">writeToDB(String name</span><span class="s0">, int </span><span class="s1">followed</span><span class="s0">, int </span><span class="s1">follows</span><span class="s0">, int </span><span class="s1">comments30</span><span class="s0">, int </span><span class="s1">likes30</span><span class="s0">,</span><span class="s1"> 
+<a name="l221"><span class="ln">221  </span></a>                           ArrayList&lt;String&gt; commentsTexts30) { 
+<a name="l222"><span class="ln">222  </span></a> 
+<a name="l223"><span class="ln">223  </span></a>        </span><span class="s0">try </span><span class="s1">{ 
+<a name="l224"><span class="ln">224  </span></a>            DBConnection con = </span><span class="s0">new </span><span class="s1">DBConnection()</span><span class="s0">;</span><span class="s1"> 
+<a name="l225"><span class="ln">225  </span></a>            Connection connection = con.getConn()</span><span class="s0">;</span><span class="s1"> 
+<a name="l226"><span class="ln">226  </span></a>            con.insertRow(connection</span><span class="s0">, </span><span class="s1">name </span><span class="s0">, </span><span class="s1">followed</span><span class="s0">, </span><span class="s1">follows</span><span class="s0">, </span><span class="s1">comments30</span><span class="s0">, </span><span class="s1">likes30</span><span class="s0">, </span><span class="s1">commentsTexts30)</span><span class="s0">;</span><span class="s1"> 
+<a name="l227"><span class="ln">227  </span></a>        } 
+<a name="l228"><span class="ln">228  </span></a>        </span><span class="s0">catch </span><span class="s1">(Exception e){ 
+<a name="l229"><span class="ln">229  </span></a>            </span><span class="s5">//e.printStackTrace();</span><span class="s1"> 
+<a name="l230"><span class="ln">230  </span></a>            </span><span class="s5">//out.print(e.toString());</span><span class="s1"> 
+<a name="l231"><span class="ln">231  </span></a>            System.out.println(e.getMessage())</span><span class="s0">;</span><span class="s1"> 
+<a name="l232"><span class="ln">232  </span></a>        } 
+<a name="l233"><span class="ln">233  </span></a>        </span><span class="s5">// TODO Auto-generated method stub</span><span class="s1"> 
+<a name="l234"><span class="ln">234  </span></a> 
+<a name="l235"><span class="ln">235  </span></a>    } 
+<a name="l236"><span class="ln">236  </span></a>    </span><span class="s2">/** 
+<a name="l237"><span class="ln">237  </span></a>     * 
+<a name="l238"><span class="ln">238  </span></a>     * Получение коллекции 
+<a name="l239"><span class="ln">239  </span></a>     * </span><span class="s6">@param </span><span class="s2">commentsTexts30: Массив коментарие за на последние 30 постов 
+<a name="l240"><span class="ln">240  </span></a>     * </span><span class="s6">@return </span><span class="s2">Коллекция с ключами-слово и значениями-количество повторений 
+<a name="l241"><span class="ln">241  </span></a>     * 
+<a name="l242"><span class="ln">242  </span></a>     * 
+<a name="l243"><span class="ln">243  </span></a>     */</span><span class="s1"> 
+<a name="l244"><span class="ln">244  </span></a>    </span><span class="s0">private </span><span class="s1">Map&lt;String</span><span class="s0">, </span><span class="s1">Integer&gt; getWordRepeate(ArrayList&lt;String&gt; commentsTexts30) { 
+<a name="l245"><span class="ln">245  </span></a> 
+<a name="l246"><span class="ln">246  </span></a>        Map&lt;String</span><span class="s0">,</span><span class="s1">Integer&gt; mapWords = </span><span class="s0">new </span><span class="s1">HashMap&lt;String</span><span class="s0">, </span><span class="s1">Integer&gt;()</span><span class="s0">;</span><span class="s1"> 
+<a name="l247"><span class="ln">247  </span></a>        ArrayList&lt;String&gt; words = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span><span class="s1"> 
+<a name="l248"><span class="ln">248  </span></a>        </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s4">0</span><span class="s0">; </span><span class="s1">i&lt;commentsTexts30.size()</span><span class="s0">;</span><span class="s1">i++) 
+<a name="l249"><span class="ln">249  </span></a>        { 
+<a name="l250"><span class="ln">250  </span></a>            String strtrim = commentsTexts30.get(i).trim()</span><span class="s0">;</span><span class="s1"> 
+<a name="l251"><span class="ln">251  </span></a>            String[] str = strtrim.split(</span><span class="s3">&quot; &quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l252"><span class="ln">252  </span></a>            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s4">0</span><span class="s0">; </span><span class="s1">j&lt;str.length</span><span class="s0">;</span><span class="s1">j++){ 
+<a name="l253"><span class="ln">253  </span></a>                </span><span class="s0">if </span><span class="s1">(!str[j].startsWith(</span><span class="s3">&quot;@&quot;</span><span class="s1">)) 
+<a name="l254"><span class="ln">254  </span></a>                { 
+<a name="l255"><span class="ln">255  </span></a>                    String result = str[j].replaceAll(</span><span class="s3">&quot;</span><span class="s0">\\</span><span class="s3">!|</span><span class="s0">\\</span><span class="s3">.|</span><span class="s0">\\</span><span class="s3">,|</span><span class="s0">\\</span><span class="s3">?&quot;</span><span class="s0">, </span><span class="s3">&quot;&quot;</span><span class="s1">).toLowerCase().trim()</span><span class="s0">;</span><span class="s1"> 
+<a name="l256"><span class="ln">256  </span></a>                    </span><span class="s0">if </span><span class="s1">(!result.equals(</span><span class="s3">&quot;?&quot;</span><span class="s1">)||!result.equals(</span><span class="s3">&quot;&quot;</span><span class="s1">)) 
+<a name="l257"><span class="ln">257  </span></a>                    { 
+<a name="l258"><span class="ln">258  </span></a>                        words.add(result)</span><span class="s0">;</span><span class="s1"> 
+<a name="l259"><span class="ln">259  </span></a>                    } 
+<a name="l260"><span class="ln">260  </span></a>                } 
+<a name="l261"><span class="ln">261  </span></a>            } 
+<a name="l262"><span class="ln">262  </span></a>        } 
+<a name="l263"><span class="ln">263  </span></a>        </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s4">0</span><span class="s0">; </span><span class="s1">i&lt;words.size()</span><span class="s0">;</span><span class="s1">i++) 
+<a name="l264"><span class="ln">264  </span></a>        { 
+<a name="l265"><span class="ln">265  </span></a>            </span><span class="s0">int </span><span class="s1">wCount = </span><span class="s4">0</span><span class="s0">;</span><span class="s1"> 
+<a name="l266"><span class="ln">266  </span></a>            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s4">0</span><span class="s0">; </span><span class="s1">j&lt;words.size()</span><span class="s0">;</span><span class="s1">j++) 
+<a name="l267"><span class="ln">267  </span></a>            { 
+<a name="l268"><span class="ln">268  </span></a>                </span><span class="s0">if </span><span class="s1">(words.get(i).equals(words.get(j))) 
+<a name="l269"><span class="ln">269  </span></a>                { 
+<a name="l270"><span class="ln">270  </span></a>                    wCount ++</span><span class="s0">;</span><span class="s1"> 
+<a name="l271"><span class="ln">271  </span></a>                } 
+<a name="l272"><span class="ln">272  </span></a>            } 
+<a name="l273"><span class="ln">273  </span></a>            </span><span class="s0">if </span><span class="s1">(wCount&gt;</span><span class="s4">1</span><span class="s1">){ 
+<a name="l274"><span class="ln">274  </span></a>                mapWords.put(words.get(i)</span><span class="s0">, </span><span class="s1">wCount)</span><span class="s0">;</span><span class="s1"> 
+<a name="l275"><span class="ln">275  </span></a>            } 
+<a name="l276"><span class="ln">276  </span></a> 
+<a name="l277"><span class="ln">277  </span></a>        } 
+<a name="l278"><span class="ln">278  </span></a> 
+<a name="l279"><span class="ln">279  </span></a> 
+<a name="l280"><span class="ln">280  </span></a>        </span><span class="s0">return </span><span class="s1">mapWords</span><span class="s0">;</span><span class="s1"> 
+<a name="l281"><span class="ln">281  </span></a>    } 
+<a name="l282"><span class="ln">282  </span></a> 
+<a name="l283"><span class="ln">283  </span></a>    </span><span class="s2">/** 
+<a name="l284"><span class="ln">284  </span></a>     * 
+<a name="l285"><span class="ln">285  </span></a>     * Скоринг 
+<a name="l286"><span class="ln">286  </span></a>     * </span><span class="s6">@param </span><span class="s2">followed: количество фоловеров 
+<a name="l287"><span class="ln">287  </span></a>     * </span><span class="s6">@param </span><span class="s2">follows:количество фоловьемых 
+<a name="l288"><span class="ln">288  </span></a>     * </span><span class="s6">@param </span><span class="s2">likes30:количество лайков на последние 30 постов 
+<a name="l289"><span class="ln">289  </span></a>     * </span><span class="s6">@return </span><span class="s2">баллы на основе данных 
+<a name="l290"><span class="ln">290  </span></a>     * 
+<a name="l291"><span class="ln">291  </span></a>     */</span><span class="s1"> 
+<a name="l292"><span class="ln">292  </span></a>    </span><span class="s0">private double </span><span class="s1">getScore(</span><span class="s0">int </span><span class="s1">followed</span><span class="s0">, int </span><span class="s1">follows</span><span class="s0">, int </span><span class="s1">likes30) { 
+<a name="l293"><span class="ln">293  </span></a>        </span><span class="s0">double </span><span class="s1">score = </span><span class="s4">1</span><span class="s0">;</span><span class="s1"> 
+<a name="l294"><span class="ln">294  </span></a>        </span><span class="s0">if </span><span class="s1">(followed &gt;</span><span class="s4">500</span><span class="s1">) 
+<a name="l295"><span class="ln">295  </span></a>        { 
+<a name="l296"><span class="ln">296  </span></a>            </span><span class="s0">int </span><span class="s1">tempfd = (followed/</span><span class="s4">500</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l297"><span class="ln">297  </span></a>            </span><span class="s0">if</span><span class="s1">(tempfd &gt;= </span><span class="s4">5</span><span class="s1">) 
+<a name="l298"><span class="ln">298  </span></a>            { 
+<a name="l299"><span class="ln">299  </span></a>                score += </span><span class="s4">0.5</span><span class="s0">;</span><span class="s1"> 
+<a name="l300"><span class="ln">300  </span></a>            } 
+<a name="l301"><span class="ln">301  </span></a>            </span><span class="s0">else</span><span class="s1"> 
+<a name="l302"><span class="ln">302  </span></a>            { 
+<a name="l303"><span class="ln">303  </span></a>                score += (tempfd/</span><span class="s4">10</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l304"><span class="ln">304  </span></a>            } 
+<a name="l305"><span class="ln">305  </span></a>        } 
+<a name="l306"><span class="ln">306  </span></a>        </span><span class="s0">else</span><span class="s1"> 
+<a name="l307"><span class="ln">307  </span></a>        { 
+<a name="l308"><span class="ln">308  </span></a>            </span><span class="s0">if </span><span class="s1">(followed&lt;</span><span class="s4">50</span><span class="s1">) 
+<a name="l309"><span class="ln">309  </span></a>            { 
+<a name="l310"><span class="ln">310  </span></a>                score += -</span><span class="s4">0.2</span><span class="s0">;</span><span class="s1"> 
+<a name="l311"><span class="ln">311  </span></a>            } 
+<a name="l312"><span class="ln">312  </span></a>        } 
+<a name="l313"><span class="ln">313  </span></a>        System.out.println(</span><span class="s3">&quot;Score after fd:---&gt; &quot; </span><span class="s1">+score)</span><span class="s0">;</span><span class="s1"> 
+<a name="l314"><span class="ln">314  </span></a>        </span><span class="s0">if </span><span class="s1">(follows&gt;</span><span class="s4">200</span><span class="s1">) 
+<a name="l315"><span class="ln">315  </span></a>        { 
+<a name="l316"><span class="ln">316  </span></a>            </span><span class="s0">int </span><span class="s1">fs = (follows/</span><span class="s4">200</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l317"><span class="ln">317  </span></a>            </span><span class="s0">if </span><span class="s1">(fs&gt;</span><span class="s4">3</span><span class="s1">) 
+<a name="l318"><span class="ln">318  </span></a>            { 
+<a name="l319"><span class="ln">319  </span></a>                score -= </span><span class="s4">0.3</span><span class="s0">;</span><span class="s1"> 
+<a name="l320"><span class="ln">320  </span></a>            } 
+<a name="l321"><span class="ln">321  </span></a>            </span><span class="s0">else</span><span class="s1"> 
+<a name="l322"><span class="ln">322  </span></a>            { 
+<a name="l323"><span class="ln">323  </span></a>                score -= (fs/</span><span class="s4">10</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l324"><span class="ln">324  </span></a>            } 
+<a name="l325"><span class="ln">325  </span></a>        } 
+<a name="l326"><span class="ln">326  </span></a>        System.out.println(</span><span class="s3">&quot;Score after fs:---&gt; &quot; </span><span class="s1">+score)</span><span class="s0">;</span><span class="s1"> 
+<a name="l327"><span class="ln">327  </span></a>        </span><span class="s0">if </span><span class="s1">(likes30&gt;</span><span class="s4">30</span><span class="s1">) 
+<a name="l328"><span class="ln">328  </span></a>        { 
+<a name="l329"><span class="ln">329  </span></a>            </span><span class="s0">int </span><span class="s1">lk = ((likes30/</span><span class="s4">30</span><span class="s1">-</span><span class="s4">30</span><span class="s1">)/</span><span class="s4">10</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l330"><span class="ln">330  </span></a>            System.out.println(</span><span class="s3">&quot;Score after likes:---&gt; &quot; </span><span class="s1">+score + lk)</span><span class="s0">;</span><span class="s1"> 
+<a name="l331"><span class="ln">331  </span></a>            score += (</span><span class="s0">double</span><span class="s1">) lk/</span><span class="s4">10</span><span class="s0">;</span><span class="s1"> 
+<a name="l332"><span class="ln">332  </span></a>            System.out.println(</span><span class="s3">&quot;Score after lk/10:---&gt; &quot; </span><span class="s1">+score)</span><span class="s0">;</span><span class="s1"> 
+<a name="l333"><span class="ln">333  </span></a>        } 
+<a name="l334"><span class="ln">334  </span></a>        </span><span class="s0">else</span><span class="s1"> 
+<a name="l335"><span class="ln">335  </span></a>        { 
+<a name="l336"><span class="ln">336  </span></a>            </span><span class="s0">if </span><span class="s1">(likes30&lt;</span><span class="s4">10</span><span class="s1">) 
+<a name="l337"><span class="ln">337  </span></a>            { 
+<a name="l338"><span class="ln">338  </span></a>                score -= </span><span class="s4">0.3</span><span class="s0">;</span><span class="s1"> 
+<a name="l339"><span class="ln">339  </span></a>            } 
+<a name="l340"><span class="ln">340  </span></a>            </span><span class="s0">else if </span><span class="s1">(likes30&lt;</span><span class="s4">20</span><span class="s1">) 
+<a name="l341"><span class="ln">341  </span></a>            { 
+<a name="l342"><span class="ln">342  </span></a>                score -= </span><span class="s4">0.2</span><span class="s0">;</span><span class="s1"> 
+<a name="l343"><span class="ln">343  </span></a>            } 
+<a name="l344"><span class="ln">344  </span></a>            </span><span class="s0">else if </span><span class="s1">(likes30&lt;</span><span class="s4">30</span><span class="s1">) 
+<a name="l345"><span class="ln">345  </span></a>            { 
+<a name="l346"><span class="ln">346  </span></a>                score -= </span><span class="s4">0.1</span><span class="s0">;</span><span class="s1"> 
+<a name="l347"><span class="ln">347  </span></a>            } 
+<a name="l348"><span class="ln">348  </span></a>        } 
+<a name="l349"><span class="ln">349  </span></a>        </span><span class="s0">return </span><span class="s1">score</span><span class="s0">;</span><span class="s1"> 
+<a name="l350"><span class="ln">350  </span></a>    } 
+<a name="l351"><span class="ln">351  </span></a>    </span><span class="s2">/** 
+<a name="l352"><span class="ln">352  </span></a>     * 
+<a name="l353"><span class="ln">353  </span></a>     * Получение массива комментариев 
+<a name="l354"><span class="ln">354  </span></a>     * </span><span class="s6">@param </span><span class="s2">reqMedia: строка запроса для получения данных 
+<a name="l355"><span class="ln">355  </span></a>     * </span><span class="s6">@return </span><span class="s2">массив комментариев 
+<a name="l356"><span class="ln">356  </span></a>     * 
+<a name="l357"><span class="ln">357  </span></a>     */</span><span class="s1"> 
+<a name="l358"><span class="ln">358  </span></a>    </span><span class="s0">private </span><span class="s1">ArrayList&lt;String&gt; getCommentsTexts30(String reqMedia) </span><span class="s0">throws </span><span class="s1">JSONException</span><span class="s0">, </span><span class="s1">IOException { 
+<a name="l359"><span class="ln">359  </span></a>        ArrayList&lt;String&gt; comments = </span><span class="s0">new </span><span class="s1">ArrayList&lt;String&gt;()</span><span class="s0">;</span><span class="s1"> 
+<a name="l360"><span class="ln">360  </span></a>        JSONObject jsonComm = </span><span class="s0">new </span><span class="s1">JSONObject(getjson(reqMedia).toString())</span><span class="s0">;</span><span class="s1"> 
+<a name="l361"><span class="ln">361  </span></a>        JSONArray dataComm = jsonComm.getJSONArray(</span><span class="s3">&quot;data&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l362"><span class="ln">362  </span></a> 
+<a name="l363"><span class="ln">363  </span></a>        </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s4">0</span><span class="s0">; </span><span class="s1">i&lt; dataComm.length()</span><span class="s0">;</span><span class="s1">i++) 
+<a name="l364"><span class="ln">364  </span></a>        { 
+<a name="l365"><span class="ln">365  </span></a>            JSONObject countsCommText = dataComm.getJSONObject(i).getJSONObject(</span><span class="s3">&quot;comments&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l366"><span class="ln">366  </span></a>            JSONArray texts = countsCommText.getJSONArray(</span><span class="s3">&quot;data&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l367"><span class="ln">367  </span></a>            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s4">0</span><span class="s0">; </span><span class="s1">j&lt;texts.length()</span><span class="s0">;</span><span class="s1">j++) 
+<a name="l368"><span class="ln">368  </span></a>            { 
+<a name="l369"><span class="ln">369  </span></a>                String commTexts = texts.getJSONObject(j).getString(</span><span class="s3">&quot;text&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l370"><span class="ln">370  </span></a>                comments.add(commTexts)</span><span class="s0">;</span><span class="s1"> 
+<a name="l371"><span class="ln">371  </span></a>            } 
+<a name="l372"><span class="ln">372  </span></a>        } 
+<a name="l373"><span class="ln">373  </span></a>        </span><span class="s0">return </span><span class="s1">comments</span><span class="s0">;</span><span class="s1"> 
+<a name="l374"><span class="ln">374  </span></a>    } 
+<a name="l375"><span class="ln">375  </span></a>    </span><span class="s2">/** 
+<a name="l376"><span class="ln">376  </span></a>     * 
+<a name="l377"><span class="ln">377  </span></a>     * Получения количества лайков 
+<a name="l378"><span class="ln">378  </span></a>     * </span><span class="s6">@param </span><span class="s2">reqMedia: строка запроса для получения данных 
+<a name="l379"><span class="ln">379  </span></a>     * </span><span class="s6">@return </span><span class="s2">количество лайков 
+<a name="l380"><span class="ln">380  </span></a>     * 
+<a name="l381"><span class="ln">381  </span></a>     */</span><span class="s1"> 
+<a name="l382"><span class="ln">382  </span></a>    </span><span class="s0">private int </span><span class="s1">getLikesCount(String reqMedia) </span><span class="s0">throws </span><span class="s1">JSONException</span><span class="s0">, </span><span class="s1">IOException { 
+<a name="l383"><span class="ln">383  </span></a>        </span><span class="s0">int </span><span class="s1">resp = </span><span class="s4">0</span><span class="s0">;</span><span class="s1"> 
+<a name="l384"><span class="ln">384  </span></a>        JSONObject jsonComm = </span><span class="s0">new </span><span class="s1">JSONObject(getjson(reqMedia).toString())</span><span class="s0">;</span><span class="s1"> 
+<a name="l385"><span class="ln">385  </span></a>        JSONArray dataComm = jsonComm.getJSONArray(</span><span class="s3">&quot;data&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l386"><span class="ln">386  </span></a>        </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s4">0</span><span class="s0">; </span><span class="s1">i&lt; dataComm.length()</span><span class="s0">;</span><span class="s1">i++) 
+<a name="l387"><span class="ln">387  </span></a>        { 
+<a name="l388"><span class="ln">388  </span></a>            JSONObject countsComm = dataComm.getJSONObject(i).getJSONObject(</span><span class="s3">&quot;likes&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l389"><span class="ln">389  </span></a>            resp += countsComm.getInt(</span><span class="s3">&quot;count&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1">} 
+<a name="l390"><span class="ln">390  </span></a>        </span><span class="s0">return </span><span class="s1">resp</span><span class="s0">;</span><span class="s1"> 
+<a name="l391"><span class="ln">391  </span></a>    } 
+<a name="l392"><span class="ln">392  </span></a>    </span><span class="s2">/** 
+<a name="l393"><span class="ln">393  </span></a>     * 
+<a name="l394"><span class="ln">394  </span></a>     * Получения количества комментариев 
+<a name="l395"><span class="ln">395  </span></a>     * </span><span class="s6">@param </span><span class="s2">reqMedia: строка запроса для получения данных 
+<a name="l396"><span class="ln">396  </span></a>     * </span><span class="s6">@return </span><span class="s2">количество комментариев 
+<a name="l397"><span class="ln">397  </span></a>     * 
+<a name="l398"><span class="ln">398  </span></a>     */</span><span class="s1"> 
+<a name="l399"><span class="ln">399  </span></a>    </span><span class="s0">private int </span><span class="s1">getCommentsCount(String reqMedia) </span><span class="s0">throws </span><span class="s1">JSONException</span><span class="s0">, </span><span class="s1">IOException { 
+<a name="l400"><span class="ln">400  </span></a> 
+<a name="l401"><span class="ln">401  </span></a>        </span><span class="s0">int </span><span class="s1">resp = </span><span class="s4">0</span><span class="s0">;</span><span class="s1"> 
+<a name="l402"><span class="ln">402  </span></a>        JSONObject jsonComm = </span><span class="s0">new </span><span class="s1">JSONObject(getjson(reqMedia).toString())</span><span class="s0">;</span><span class="s1"> 
+<a name="l403"><span class="ln">403  </span></a>        JSONArray dataComm = jsonComm.getJSONArray(</span><span class="s3">&quot;data&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l404"><span class="ln">404  </span></a>        </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s4">0</span><span class="s0">; </span><span class="s1">i&lt; dataComm.length()</span><span class="s0">;</span><span class="s1">i++) 
+<a name="l405"><span class="ln">405  </span></a>        { 
+<a name="l406"><span class="ln">406  </span></a>            JSONObject countsComm = dataComm.getJSONObject(i).getJSONObject(</span><span class="s3">&quot;comments&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l407"><span class="ln">407  </span></a>            resp += countsComm.getInt(</span><span class="s3">&quot;count&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1">} 
+<a name="l408"><span class="ln">408  </span></a>        </span><span class="s0">return </span><span class="s1">resp</span><span class="s0">;</span><span class="s1"> 
+<a name="l409"><span class="ln">409  </span></a>    } 
+<a name="l410"><span class="ln">410  </span></a> 
+<a name="l411"><span class="ln">411  </span></a> 
+<a name="l412"><span class="ln">412  </span></a>    </span><span class="s2">/** 
+<a name="l413"><span class="ln">413  </span></a>     * 
+<a name="l414"><span class="ln">414  </span></a>     * Получения количества комментариев, количества лайков 
+<a name="l415"><span class="ln">415  </span></a>     * </span><span class="s6">@param </span><span class="s2">reqMedia: строка запроса для получения данных 
+<a name="l416"><span class="ln">416  </span></a>     * </span><span class="s6">@return </span><span class="s2">количество комментариев 
+<a name="l417"><span class="ln">417  </span></a>     * 
+<a name="l418"><span class="ln">418  </span></a>     */</span><span class="s1"> 
+<a name="l419"><span class="ln">419  </span></a> 
+<a name="l420"><span class="ln">420  </span></a>    </span><span class="s0">private </span><span class="s1">ArrayList&lt;String&gt; getMedia(String reqMedia) </span><span class="s0">throws </span><span class="s1">JSONException</span><span class="s0">, </span><span class="s1">IOException { 
+<a name="l421"><span class="ln">421  </span></a> 
+<a name="l422"><span class="ln">422  </span></a>        ArrayList&lt;String&gt; resp = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span><span class="s1"> 
+<a name="l423"><span class="ln">423  </span></a>        JSONObject jsonComm = </span><span class="s0">new </span><span class="s1">JSONObject(getjson(reqMedia).toString())</span><span class="s0">;</span><span class="s1"> 
+<a name="l424"><span class="ln">424  </span></a>        JSONArray dataComm = jsonComm.getJSONArray(</span><span class="s3">&quot;data&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l425"><span class="ln">425  </span></a>        </span><span class="s0">int </span><span class="s1">commcount = </span><span class="s4">0</span><span class="s0">;</span><span class="s1"> 
+<a name="l426"><span class="ln">426  </span></a>        </span><span class="s0">int </span><span class="s1">likecount = </span><span class="s4">0</span><span class="s0">;</span><span class="s1"> 
+<a name="l427"><span class="ln">427  </span></a>        String commtext = </span><span class="s0">null;</span><span class="s1"> 
+<a name="l428"><span class="ln">428  </span></a>        </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s4">0</span><span class="s0">; </span><span class="s1">i&lt; dataComm.length()</span><span class="s0">;</span><span class="s1">i++) 
+<a name="l429"><span class="ln">429  </span></a>        { 
+<a name="l430"><span class="ln">430  </span></a>            JSONObject countsComm = dataComm.getJSONObject(i).getJSONObject(</span><span class="s3">&quot;comments&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l431"><span class="ln">431  </span></a>            commcount += countsComm.getInt(</span><span class="s3">&quot;count&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l432"><span class="ln">432  </span></a>            JSONArray texts = countsComm.getJSONArray(</span><span class="s3">&quot;data&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l433"><span class="ln">433  </span></a>            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s4">0</span><span class="s0">; </span><span class="s1">j&lt;texts.length()</span><span class="s0">;</span><span class="s1">j++) 
+<a name="l434"><span class="ln">434  </span></a>            { 
+<a name="l435"><span class="ln">435  </span></a>                String commTexts = texts.getJSONObject(j).getString(</span><span class="s3">&quot;text&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l436"><span class="ln">436  </span></a>                commtext += </span><span class="s3">&quot; &quot;</span><span class="s1">+commTexts</span><span class="s0">;</span><span class="s1"> 
+<a name="l437"><span class="ln">437  </span></a>            } 
+<a name="l438"><span class="ln">438  </span></a>            JSONObject countsLikes = dataComm.getJSONObject(i).getJSONObject(</span><span class="s3">&quot;likes&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l439"><span class="ln">439  </span></a>            likecount +=countsLikes.getInt(</span><span class="s3">&quot;count&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l440"><span class="ln">440  </span></a>        } 
+<a name="l441"><span class="ln">441  </span></a> 
+<a name="l442"><span class="ln">442  </span></a>        resp.add(String.valueOf(commcount))</span><span class="s0">;</span><span class="s1"> 
+<a name="l443"><span class="ln">443  </span></a>        resp.add(String.valueOf(likecount))</span><span class="s0">;</span><span class="s1"> 
+<a name="l444"><span class="ln">444  </span></a>        resp.add(commtext)</span><span class="s0">;</span><span class="s1"> 
+<a name="l445"><span class="ln">445  </span></a> 
+<a name="l446"><span class="ln">446  </span></a>    </span><span class="s0">return </span><span class="s1">resp</span><span class="s0">;</span><span class="s1"> 
+<a name="l447"><span class="ln">447  </span></a>    } 
+<a name="l448"><span class="ln">448  </span></a> 
+<a name="l449"><span class="ln">449  </span></a> 
+<a name="l450"><span class="ln">450  </span></a> 
+<a name="l451"><span class="ln">451  </span></a>    </span><span class="s2">/** 
+<a name="l452"><span class="ln">452  </span></a>     * 
+<a name="l453"><span class="ln">453  </span></a>     * Получения количества фоловеров 
+<a name="l454"><span class="ln">454  </span></a>     * </span><span class="s6">@param </span><span class="s2">request: строка запроса для получения данных 
+<a name="l455"><span class="ln">455  </span></a>     * </span><span class="s6">@return </span><span class="s2">количество фоловеров 
+<a name="l456"><span class="ln">456  </span></a>     * 
+<a name="l457"><span class="ln">457  </span></a>     */</span><span class="s1"> 
+<a name="l458"><span class="ln">458  </span></a>    </span><span class="s0">public </span><span class="s1">Integer getFollowed(String request) </span><span class="s0">throws </span><span class="s1">JSONException</span><span class="s0">, </span><span class="s1">IOException 
+<a name="l459"><span class="ln">459  </span></a>    { 
+<a name="l460"><span class="ln">460  </span></a>        </span><span class="s0">int </span><span class="s1">res = </span><span class="s4">0</span><span class="s0">;</span><span class="s1"> 
+<a name="l461"><span class="ln">461  </span></a>        JSONObject json = </span><span class="s0">new </span><span class="s1">JSONObject(getjson(request).toString())</span><span class="s0">;</span><span class="s1"> 
+<a name="l462"><span class="ln">462  </span></a>        JSONObject data = json.getJSONObject(</span><span class="s3">&quot;data&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l463"><span class="ln">463  </span></a>        JSONObject counts = data.getJSONObject(</span><span class="s3">&quot;counts&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l464"><span class="ln">464  </span></a>        res = counts.getInt(</span><span class="s3">&quot;followed_by&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l465"><span class="ln">465  </span></a>        </span><span class="s0">return </span><span class="s1">res</span><span class="s0">;</span><span class="s1"> 
+<a name="l466"><span class="ln">466  </span></a>    } 
+<a name="l467"><span class="ln">467  </span></a>    </span><span class="s2">/** 
+<a name="l468"><span class="ln">468  </span></a>     * 
+<a name="l469"><span class="ln">469  </span></a>     * Получения количества фоловьемых 
+<a name="l470"><span class="ln">470  </span></a>     * </span><span class="s6">@param </span><span class="s2">request: строка запроса для получения данных 
+<a name="l471"><span class="ln">471  </span></a>     * </span><span class="s6">@return </span><span class="s2">количество фоловьемых 
+<a name="l472"><span class="ln">472  </span></a>     * 
+<a name="l473"><span class="ln">473  </span></a>     */</span><span class="s1"> 
+<a name="l474"><span class="ln">474  </span></a>    </span><span class="s0">public </span><span class="s1">Integer getFollows(String request) </span><span class="s0">throws </span><span class="s1">JSONException</span><span class="s0">, </span><span class="s1">IOException 
+<a name="l475"><span class="ln">475  </span></a>    { 
+<a name="l476"><span class="ln">476  </span></a>        </span><span class="s0">int </span><span class="s1">res = </span><span class="s4">0</span><span class="s0">;</span><span class="s1"> 
+<a name="l477"><span class="ln">477  </span></a>        JSONObject json = </span><span class="s0">new </span><span class="s1">JSONObject(getjson(request).toString())</span><span class="s0">;</span><span class="s1"> 
+<a name="l478"><span class="ln">478  </span></a>        JSONObject data = json.getJSONObject(</span><span class="s3">&quot;data&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l479"><span class="ln">479  </span></a>        JSONObject counts = data.getJSONObject(</span><span class="s3">&quot;counts&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l480"><span class="ln">480  </span></a>        res = counts.getInt(</span><span class="s3">&quot;follows&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l481"><span class="ln">481  </span></a> 
+<a name="l482"><span class="ln">482  </span></a>        </span><span class="s0">return </span><span class="s1">res</span><span class="s0">;</span><span class="s1"> 
+<a name="l483"><span class="ln">483  </span></a>    } 
+<a name="l484"><span class="ln">484  </span></a>    </span><span class="s2">/** 
+<a name="l485"><span class="ln">485  </span></a>     * 
+<a name="l486"><span class="ln">486  </span></a>     * Получения количества фоловьемых 
+<a name="l487"><span class="ln">487  </span></a>     * </span><span class="s6">@param </span><span class="s2">request: строка запроса для получения данных 
+<a name="l488"><span class="ln">488  </span></a>     * </span><span class="s6">@return </span><span class="s2">количество фоловьемых 
+<a name="l489"><span class="ln">489  </span></a>     * 
+<a name="l490"><span class="ln">490  </span></a>     */</span><span class="s1"> 
+<a name="l491"><span class="ln">491  </span></a>    </span><span class="s0">public </span><span class="s1">String getName(String request) </span><span class="s0">throws </span><span class="s1">JSONException</span><span class="s0">, </span><span class="s1">IOException 
+<a name="l492"><span class="ln">492  </span></a>    { 
+<a name="l493"><span class="ln">493  </span></a>        String res = </span><span class="s0">null;</span><span class="s1"> 
+<a name="l494"><span class="ln">494  </span></a>        JSONObject json = </span><span class="s0">new </span><span class="s1">JSONObject(getjson(request).toString())</span><span class="s0">;</span><span class="s1"> 
+<a name="l495"><span class="ln">495  </span></a>        JSONObject data = json.getJSONObject(</span><span class="s3">&quot;data&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l496"><span class="ln">496  </span></a>        res = data.getString(</span><span class="s3">&quot;full_name&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l497"><span class="ln">497  </span></a> 
+<a name="l498"><span class="ln">498  </span></a>        </span><span class="s0">return </span><span class="s1">res</span><span class="s0">;</span><span class="s1"> 
+<a name="l499"><span class="ln">499  </span></a>    } 
+<a name="l500"><span class="ln">500  </span></a>    </span><span class="s2">/** 
+<a name="l501"><span class="ln">501  </span></a>     * 
+<a name="l502"><span class="ln">502  </span></a>     * Получения массива данных на основе запроса 
+<a name="l503"><span class="ln">503  </span></a>     * </span><span class="s6">@param </span><span class="s2">urlj: строка запроса 
+<a name="l504"><span class="ln">504  </span></a>     * </span><span class="s6">@return </span><span class="s2">JSON массив 
+<a name="l505"><span class="ln">505  </span></a>     * 
+<a name="l506"><span class="ln">506  </span></a>     */</span><span class="s1"> 
+<a name="l507"><span class="ln">507  </span></a>    </span><span class="s0">public </span><span class="s1">StringBuffer getjson (String urlj) </span><span class="s0">throws </span><span class="s1">IOException 
+<a name="l508"><span class="ln">508  </span></a>    { 
+<a name="l509"><span class="ln">509  </span></a>        URL url = </span><span class="s0">new </span><span class="s1">URL(urlj)</span><span class="s0">;</span><span class="s1"> 
+<a name="l510"><span class="ln">510  </span></a>        HttpURLConnection con = (HttpURLConnection) url.openConnection()</span><span class="s0">;</span><span class="s1"> 
+<a name="l511"><span class="ln">511  </span></a>        con.setRequestMethod(</span><span class="s3">&quot;GET&quot;</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l512"><span class="ln">512  </span></a>        con.setRequestProperty(</span><span class="s3">&quot;User-Agent&quot;</span><span class="s0">, </span><span class="s1">USER_AGENT)</span><span class="s0">;</span><span class="s1"> 
+<a name="l513"><span class="ln">513  </span></a> 
+<a name="l514"><span class="ln">514  </span></a>        BufferedReader in = </span><span class="s0">new </span><span class="s1">BufferedReader( 
+<a name="l515"><span class="ln">515  </span></a>                </span><span class="s0">new </span><span class="s1">InputStreamReader(con.getInputStream()))</span><span class="s0">;</span><span class="s1"> 
+<a name="l516"><span class="ln">516  </span></a>        String inputLine</span><span class="s0">;</span><span class="s1"> 
+<a name="l517"><span class="ln">517  </span></a>        StringBuffer res = </span><span class="s0">new </span><span class="s1">StringBuffer()</span><span class="s0">;</span><span class="s1"> 
+<a name="l518"><span class="ln">518  </span></a> 
+<a name="l519"><span class="ln">519  </span></a>        </span><span class="s0">while </span><span class="s1">((inputLine = in.readLine()) != </span><span class="s0">null</span><span class="s1">) { 
+<a name="l520"><span class="ln">520  </span></a>            res.append(inputLine)</span><span class="s0">;</span><span class="s1"> 
+<a name="l521"><span class="ln">521  </span></a>        } 
+<a name="l522"><span class="ln">522  </span></a>        in.close()</span><span class="s0">;</span><span class="s1"> 
+<a name="l523"><span class="ln">523  </span></a>        </span><span class="s0">return </span><span class="s1">res</span><span class="s0">;</span><span class="s1"> 
+<a name="l524"><span class="ln">524  </span></a>    } 
+<a name="l525"><span class="ln">525  </span></a>} 
+<a name="l526"><span class="ln">526  </span></a></span></pre>
+</body>
+</html>

@@ -1,0 +1,134 @@
+@font-face {
+    font-family: PTSerif-Italic; /* Гарнитура шрифта */
+    src: url(fonts/PTSerif-Italic.ttf); /* Путь к файлу со шрифтом */
+   }
+@font-face {
+    font-family: HelveticaNeue; /* Гарнитура шрифта */
+    src: url(fonts/HelveticaNeue.ttf); /* Путь к файлу со шрифтом */
+   }
+@font-face {
+    font-family: HelveticaNeueBold; /* Гарнитура шрифта */
+    src: url(fonts/HelveticaNeueBold.ttf); /* Путь к файлу со шрифтом */
+   }
+@font-face {
+    font-family: HelveticaNeueItalic; /* Гарнитура шрифта */
+    src: url(fonts/HelveticaNeueItalic.ttf); /* Путь к файлу со шрифтом */
+   }
+ a.link
+   {
+   	color:#0077CC;
+   	font-family:HelveticaNeue;
+   	font-size:13px;
+   	text-decoration: none; /* Убираем подчеркивание */
+	border-bottom: 1px #0077CC; /* Добавляем свою линию */ 
+   }
+
+
+a
+{
+   	color:#0077CC;
+   	font-family:HelveticaNeue;
+   	font-size:13px;
+   	text-decoration: none; /* Убираем подчеркивание */
+   	border-bottom: 1px ;
+   	border-bottom-color: #0077CC;
+   	border-bottom-style: solid; /* Добавляем свою линию */ 
+}
+a:visited
+{
+    text-decoration: none;
+   color: #800080;
+}
+a:hover
+{
+   color: #0000FF;
+   text-decoration: none;
+}
+h1
+{
+   font-family: HelveticaNeue;
+   font-weight: bold;
+   font-size: 32px;
+   font-style: normal;
+   text-decoration: none;
+   color: #000000;
+   background-color: transparent;
+   margin: 0px 0px 0px 0px;
+   padding: 0px 0px 0px 0px;
+   display: inline;
+}
+h2
+{
+   font-family: HelveticaNeue;
+   font-weight: bold;
+   font-size: 27px;
+   font-style: normal;
+   text-decoration: none;
+   color: #000000;
+   background-color: transparent;
+   margin: 0px 0px 0px 0px;
+   padding: 0px 0px 0px 0px;
+   display: inline;
+}
+h3
+{
+   font-family: HelveticaNeue;
+   font-weight: normal;
+   font-size: 24px;
+   font-style: normal;
+   text-decoration: none;
+   color: #000000;
+   background-color: transparent;
+   margin: 0px 0px 0px 0px;
+   padding: 0px 0px 0px 0px;
+   display: inline;
+}
+h4
+{
+   font-family: HelveticaNeue;
+   font-weight: normal;
+   font-size: 21px;
+   font-style: italic;
+   text-decoration: none;
+   color: #000000;
+   background-color: transparent;
+   margin: 0px 0px 0px 0px;
+   padding: 0px 0px 0px 0px;
+   display: inline;
+}
+h5
+{
+   font-family: HelveticaNeue;
+   font-weight: normal;
+   font-size: 19px;
+   font-style: normal;
+   text-decoration: none;
+   color: #000000;
+   background-color: transparent;
+   margin: 0px 0px 0px 0px;
+   padding: 0px 0px 0px 0px;
+   display: inline;
+}
+h6
+{
+   font-family: HelveticaNeue;
+   font-weight: normal;
+   font-size: 16px;
+   font-style: normal;
+   text-decoration: none;
+   color: #000000;
+   background-color: transparent;
+   margin: 0px 0px 0px 0px;
+   padding: 0px 0px 0px 0px;
+   display: inline;
+}
+.CustomStyle
+{
+   font-family: HelveticaNeue;
+   font-weight: bold;
+   font-size: 16px;
+   font-style: normal;
+   text-decoration: none;
+   color: #000080;
+   background-color: transparent;
+}
