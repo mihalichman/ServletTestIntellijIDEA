@@ -9,11 +9,12 @@
 <%@ page import="com.mihalich.servlet.instagram.MyServlet" %>
 <html>
 <head>
-  <meta charset="utf-8">
+    <meta charset="utf-8">
   <title>R A F I N A D E</title>
   <meta name="generator" content="WYSIWYG Web Builder 11 Trial Version - http://www.wysiwygwebbuilder.com">
   <link href="Untitled2.css" rel="stylesheet">
   <link href="page1.css" rel="stylesheet">
+  <link rel="shortcut icon" href="/images/logo-rafinad.png" type="image/png">
   <style>
     @font-face {
       font-family: PTSerif-Italic; /* Гарнитура шрифта */
@@ -52,10 +53,10 @@
   <img src="images/img0003.png" id="Shape1" alt="" style="width:1440px;height:42px;">
 </div>
 <div id="wb_Text1" style="position:absolute;left:40px;top:13px;width:140px;height:16px;z-index:3;text-align:left;">
-  <span style="color:#000000;font-family:HelveticaNeueBold;font-size:13px;">+7 812 677-01-98</span>
+  <span style="color:#000000;font-family:HelveticaNeueBold,serif;font-size:13px;">+7 812 677-01-98</span>
 </div>
 <div id="wb_Text2" style="position:absolute;left:180px;top:13px;width:280px;height:16px;text-align:left;z-index:4;">
-  <span style="color:#999999;font-family:HelveticaNeueItalic;font-size:13px;">Бесплатная доставка по Росии и Миру</span>
+  <span style="color:#999999;font-family:HelveticaNeueItalic,serif;font-size:13px;">Бесплатная доставка по Росии и Миру</span>
 </div>
 <button id="AdvancedButton1" type="button" style="position:absolute;left:563px;top:14px;width:14px;height:18px;z-index:5;border:0px" name=""><img src="images/rectangle-404@2x.png" border=0></img>
 </button>
@@ -145,8 +146,8 @@
   </select>
 </div>
 
-<div style="position:absolute;left:0px;top:1200px;width:100%;height:200;z-index:30;">
-  <p><iframe name="area" width = 100% height = "200" seamless="seamless"></iframe></p>
+<div style="position:absolute;left:0px;top:1200px;width:100%;height:200px;z-index:30;">
+  <p><iframe name="area" width = 100% height = "200" seamless></iframe></p>
 </div>
 </body>
 </html>
