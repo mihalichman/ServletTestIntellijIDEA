@@ -14,7 +14,6 @@ import java.net.URL;
 import java.sql.Connection;
 import java.util.*;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -207,16 +206,13 @@ public class MyServlet extends HttpServlet {
 
         Map<String,Integer> mapWords = new HashMap<String, Integer>();
         ArrayList<String> words = new ArrayList<>();
-        for (int i=0; i<commentsTexts30.size();i++)
-        {
-            String strtrim = commentsTexts30.get(i).trim();
+        for (String aCommentsTexts30 : commentsTexts30) {
+            String strtrim = aCommentsTexts30.trim();
             String[] str = strtrim.split(" ");
-            for (int j=0; j<str.length;j++){
-                if (!str[j].startsWith("@"))
-                {
-                    String result = str[j].replaceAll("\\!|\\.|\\,|\\?", "").toLowerCase().trim();
-                    if (!result.equals("?")||!result.equals(""))
-                    {
+            for (String aStr : str) {
+                if (!aStr.startsWith("@")) {
+                    String result = aStr.replaceAll("!|\\.|,|\\?", "").toLowerCase().trim();
+                    if (!result.equals("?") || !result.equals("")) {
                         words.add(result);
                     }
                 }
@@ -225,11 +221,9 @@ public class MyServlet extends HttpServlet {
         for (int i=0; i<words.size();i++)
         {
             int wCount = 0;
-            for (int j=0; j<words.size();j++)
-            {
-                if (words.get(i).equals(words.get(j)))
-                {
-                    wCount ++;
+            for (String word : words) {
+                if (words.get(i).equals(word)) {
+                    wCount++;
                 }
             }
             if (wCount>1){

@@ -8,8 +8,8 @@
           <element id="module-output" name="ServletTest" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="json" />
           <element id="library" level="project" name="servlet-api-3" />
+          <element id="library" level="project" name="json-20140107" />
         </element>
       </element>
       <element id="directory" name="src">
